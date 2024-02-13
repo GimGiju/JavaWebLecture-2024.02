@@ -8,10 +8,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-/**
- * Servlet implementation class Ex01_FirstServlet
- */
-@WebServlet("/hello")
+// 웹 브라우저 주소창에 localhost:8080/jw/hello 을 입력했을 경우 처리하는 코드
+@WebServlet({"/hello","/ch05/hello"})
 public class Ex01_FirstServlet extends HttpServlet {
 	// Get 방식의 요청이 왔을때 처리해주는 코드
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -25,7 +23,7 @@ public class Ex01_FirstServlet extends HttpServlet {
 				+ "	<h1>자바 서블릿에서 작성한 코드입니다.</h1>"
 				+ "</body>"
 				+ "</html>";
-		response.setContentType("text/html; charset=utf-8");   // 이렇게 안쓰면 한글이 깨짐   //request 올려주기 ,response
+		response.setContentType("text/html; charset=utf-8");   // 이렇게 안쓰면 한글이 깨짐   //request,response 의 의미 https://chat.openai.com/c/5275edfe-9ab9-4371-a72d-d762c0d4a29a
 		PrintWriter out = response.getWriter();
 		out.print(html);			//Servlet 코드
 	}
