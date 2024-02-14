@@ -9,9 +9,14 @@ public class User {
 	private String email;
 	private LocalDate regDate;
 	private int isDeleted;
-	
+
 	public User() { }
-	
+
+	public User(String uid, String pwd) {
+		this.uid = uid;
+		this.pwd = pwd;
+	}
+
 	public User(String uid, String pwd, String uname, String email) {
 		this.uid = uid;
 		this.pwd = pwd;
@@ -27,6 +32,8 @@ public class User {
 		this.regDate = regDate;
 		this.isDeleted = isDeleted;
 	}
+
+	
 	
 	@Override
 	public String toString() {
@@ -81,7 +88,5 @@ public class User {
 	public void setIsDeleted(int isDeleted) {
 		this.isDeleted = isDeleted;
 	}
-	
-	
-	
+
 }
