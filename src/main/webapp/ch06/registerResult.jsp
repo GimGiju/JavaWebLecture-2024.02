@@ -16,7 +16,7 @@
 		<tr><td>아이디</td><td>${user.uid}</td></tr>
 		<tr><td>패스워드</td><td>${user.pwd}</td></tr>
 		<tr><td>이름</td><td>${user.uname}</td></tr>
-		<tr><td>이메일</td><td>${user.email}</td>></tr>
+		<tr><td>이메일</td><td>${user.email}</td></tr>
 		<tr><td>등록일자</td><td>${user.regDate}</td></tr>
 		<tr><td>삭제여부</td><td>${user.isDeleted}</td></tr>
 		</tr>
