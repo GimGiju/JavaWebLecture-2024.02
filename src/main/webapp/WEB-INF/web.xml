@@ -129,4 +129,24 @@
     <servlet-name>Ex05_Update</servlet-name>
     <url-pattern>/Ex05_Update</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>x01_Search</display-name>
+    <servlet-name>x01_Search</servlet-name>
+    <servlet-class>ch99.x01_Search</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>x01_Search</servlet-name>
+    <url-pattern>/x01_Search</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>x02_List</display-name>
+    <servlet-name>x02_List</servlet-name>
+    <servlet-class>ch99.x02_List</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>x02_List</servlet-name>
+    <url-pattern>/x02_List</url-pattern>
+  </servlet-mapping>
 </web-app>
