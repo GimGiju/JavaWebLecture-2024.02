@@ -14,7 +14,7 @@
 	<h1>City List</h1>
 	<hr>
 	<table border = "1">
-		<tr><th>아이디</th><th>도시명</th><th>국가코드</th><th>지역명</th><th>인구수</th></tr>
+		<tr><th>아이디</th><th>가수 이름</th><th>데뷔 날짜</th><th>곡 타이틀</th><th>가사</th></tr>
 	</table>
 </body>
 </html>
