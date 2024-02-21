@@ -1,4 +1,4 @@
-package ch09_cookie_session.user;
+package project.entity;
 
 import java.time.LocalDate;
 

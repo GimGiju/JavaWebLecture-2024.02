@@ -6,9 +6,9 @@
 	<meta charset="UTF-8">
 	<title>사용자 관리</title>
 </head>
-<body style="margin: 50px;">
+<body style="margin: 50px">
 	<h1>로그인
-		<button style="margin-left: 100px;" onclick="location.herf='/jw/ch09/user/register'">회원 가입</button>
+		<button style="margin-left: 100px" onclick="location.href='/jw/ch09/user/register'">회원 가입</button>
 	</h1>
 	<hr>
 	<form action="/jw/ch09/user/login" method="post">

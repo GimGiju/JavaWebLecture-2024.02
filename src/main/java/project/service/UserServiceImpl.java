@@ -1,8 +1,11 @@
-package ch09_cookie_session.user;
+package project.service;
 
 import java.util.List;
 
 import org.mindrot.jbcrypt.BCrypt;
+
+import project.dao.UserDao;
+import project.entity.User;
 
 public class UserServiceImpl implements UserService {
 	private UserDao userDao = new UserDao();

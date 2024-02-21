@@ -3,16 +3,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>사용자 관리</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
-	<style>
-		* { font-family: 'Noto Sans KR', sans-serif; }
-		a { text-decoration: none; }
-    td { text-align: center; }
+	<%@ include file="../common/_head.jspf" %>
+  	<style>
+    	td { text-align: center; }
 	</style>	
 </head>
 <body class="bg-light">
@@ -32,7 +25,7 @@
           <div class="card-body">
             <div class="card-title"><h3><strong>사용자 가입</strong></h3></div>
             <hr>
-            <form action="/jw/ch09/user/register" method="post">
+            <form action="/jw/bbs/user/register" method="post">
               <table class="table table-borderless">
                 <tr>
                   <td style="width: 45%;"><label class="col-form-label">사용자 ID</label></td>
@@ -64,7 +57,7 @@
             </form>
             <p class="mt-3">
               <span class="me-3">이미 사용자 계정이 있으신가요?</span>
-              <a href="/jw/ch09/user/login">로그인</a>
+              <a href="/jw/bbs/user/login">로그인</a>
             </p>
             <div class="mt-3 mb-3">
               <span class="me-3">소셜 계정으로 가입</span>
@@ -81,5 +74,7 @@
       <div class="col-4"></div>
     </div>
   </div>
+  
+  <%@ include file="../common/_bottom.jspf" %>
 </body>
 </html>
