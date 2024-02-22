@@ -75,36 +75,67 @@ public class UserController extends HttpServlet {
 			break;
 			
 		case "register":
-			if(method.equals("GET")) {
-				rd = request.getRequestDispatcher("/ch09/user/register.jsp");
+			if (method.equals("GET")) {
+				session.invalidate();
+//				rd = request.getRequestDispatcher("/ch09/user/register.jsp");
+				rd = request.getRequestDispatcher("/ch09/user/registerBS.jsp");
 				rd.forward(request, response);
-			}else {
+			} else {
 				uid = request.getParameter("uid");
 				pwd = request.getParameter("pwd");
-				pwd2 = request.getParameter("pdw2");
+				pwd2 = request.getParameter("pwd2");
 				uname = request.getParameter("uname");
 				email = request.getParameter("email");
-				if(uSvc.getUserByUid(uid) !=null) {
-					re
+				if (uSvc.getUserByUid(uid) != null) {
+					rd = request.getRequestDispatcher("/ch09/user/alertMsg.jsp");
+					request.setAttribute("msg", "아이디가 중복입니다.");
+					request.setAttribute("url", "/jw/ch09/user/register");
+					rd.forward(request, response); 
+				} else if (pwd.equals(pwd2)) {
+					user = new User(uid, pwd, uname, email);
+					uSvc.registerUser(user);
+					response.sendRedirect("/jw/ch09/user/list?page=1");
+				} else {
+					rd = request.getRequestDispatcher("/ch09/user/alertMsg.jsp");
+					request.setAttribute("msg", "패스워드 입력이 잘못되었습니다.");
+					request.setAttribute("url", "/jw/ch09/user/register");
+					rd.forward(request, response);
 				}
 			}
 			break;
 		
 		case "update":
-			if(method.equals("GET")) {
-				rd = request.getRequestDispatcher("/ch09/user/delete.jsp");
+			if (method.equals("GET")) {
+				uid = request.getParameter("uid");
+				user = uSvc.getUserByUid(uid);
+//				rd = request.getRequestDispatcher("/ch09/user/update.jsp");
+				rd = request.getRequestDispatcher("/ch09/user/updateBS.jsp");
+				request.setAttribute("user", user);
 				rd.forward(request, response);
-			}
-		case "delete":
-			if(method.equals("GET")) {
-				uid =request.getParameter("uid");				// request 객체의 getParamaeter 메서드로 사용자가 입력한 데이터를 가져올수있음
-				uSvc.deleteUser(uid);
-				String sessUid = (String) session.getAttribute("sessUid");		// session.getAttribute 세션에 저장된 값을 불러오는것
-				if( !sessUid.equals("admin")) {				// 세션에 저장 되어있는 아이디와
-					session.invalidate();					// invalidatedms 세션에 저장된 데이터를 모두 없애는 기능
-				}
+			} else {
+				uid = request.getParameter("uid");
+				pwd = request.getParameter("pwd");
+				pwd2 = request.getParameter("pwd2");
+				hashedPwd = request.getParameter("hashedPwd");
+				uname = request.getParameter("uname");
+				email = request.getParameter("email");
+				if (pwd != null && pwd.equals(pwd2))
+					hashedPwd = BCrypt.hashpw(pwd, BCrypt.gensalt());
+				user = new User(uid, hashedPwd, uname, email);
+				uSvc.updateUser(user);
 				response.sendRedirect("/jw/ch09/user/list?page=1");
-			}break;
+			}
+			break;
+			
+		case "delete":
+			uid = request.getParameter("uid");
+			uSvc.deleteUser(uid);
+			String sessUid = (String) session.getAttribute("sessUid");
+			if (!sessUid.equals("admin"))
+				session.invalidate();
+			response.sendRedirect("/jw/ch09/user/list?page=1");
+			break;
 		}
 	}
+
 }

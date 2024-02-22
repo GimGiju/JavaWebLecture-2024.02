@@ -14,6 +14,8 @@ public interface UserService {
 	
 	List<User> getUserList(int page);		// 전체 조회 기능
 	
+	int getUserCount();						// 
+	
 	void registerUser(User user);			// 사용자 등록
 	
 	void updateUser(User user);				// 수정
