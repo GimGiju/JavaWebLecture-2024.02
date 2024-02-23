@@ -1,26 +1,47 @@
-Routing table,,,,,
-,,,,,
+Routing table,,,,,,
+,,,,,,
 "path
 ('/jwch09 는 공통)",method,입력 파라메터,"Viewer, 
-다음 행선지",넘겨줄 파라메터,설 명
-/user/list,GET,page,list viewer,List<User>list,list.jsp
-/user/register,GET,,register viewer,,register.jsp
+다음 행선지",넘겨줄 파라메터,설 명,
+/user/list,GET,page,list viewer,List<User>list,list.jsp,
+/user/register,GET,,register viewer,,register.jsp,
 ,POST,"uid,
 pwd,
 pwd2
 uname,
-email",/user/lsit?page=1,,session의 currentUserPage
-/user/login,GET,,login viewer,,
+email",/user/lsit?page=1,,session의 currentUserPage,
+/user/login,GET,,login viewer,,,
 ,POST,"uid,
 pwd",/user/lsit?page=1,,"sessUid,sessUname,
-등록"
-/user/logout,GET,,/user/lsit?page=1,,
-/user/update,GET,"uid,",update viewer,User user,update.jsp
+등록",
+/user/logout,GET,,/user/lsit?page=1,,,
+/user/update,GET,"uid,",update viewer,User user,update.jsp,
 ,POST,"uid, 
 uname, 
 email,
 pwd,
 pwd2",/user/lsit?page=1,,"pwd, pwd2가 null 이 아니면서 동일할 경우
-패스워드 변경함"
+패스워드 변경함",
 /user/delete,GET,"uid,
-pwd",/user/lsit?page=1,,
+pwd",/user/lsit?page=1,,,
+/board/list,GET,"page,
+field,
+query",list viewer,List<Board>bList,"session의 currentBoardPage, filed,
+query 등록",
+/board/insert,GET,,insert viewer,,sessUid가 없다면 /user/login,
+,POST,"title,
+content,
+sessUid",/board/list?p=1,Board board,,
+/board/detail,GET,"bid,
+uid,
+sessUid",detail viewer,,"sessUid와 uid 동일하지 않다면
+ view Count++","
+"
+/board/update,GET,bid,update viewer,Board board,update.jsp,
+,POST,"bid,
+uid
+titel,
+content
+",diteal viewer,,"Redirect 값에 session의 uid,.bid 할당",
+/board/delete,GET,bid,board/list?p=1,              ,"Redirect 값에 세션의 page,field,
+query 할당",
