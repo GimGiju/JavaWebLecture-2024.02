@@ -1,4 +1,4 @@
-package project.controller;
+package dog.controller;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -8,8 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import project.entity.User;
-import project.service.UserService;
-import project.service.UserServiceImpl;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,8 +15,10 @@ import java.util.List;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-@WebServlet({"/bbs/user/list", "/bbs/user/register", "/bbs/user/update", 
-			 "/bbs/user/delete", "/bbs/user/login", "/bbs/user/logout"})
+import ch09_cookie_session.user.UserService;
+import ch09_cookie_session.user.UserServiceImpl;
+
+@WebServlet("/")
 public class UserController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private UserService uSvc = new UserServiceImpl();
@@ -38,7 +38,7 @@ public class UserController extends HttpServlet {
 			String page_ = request.getParameter("page");
 			int page = (page_ == null || page_.equals("")) ? 1 : Integer.parseInt(page_);
 			session.setAttribute("currentUserPage", page);
-			List<User> userList = uSvc.getUserList(page);
+			List<User> userList = uSvc.getuserList(page);
 			request.setAttribute("userList", userList);
 			
 			// for pagination
@@ -83,7 +83,7 @@ public class UserController extends HttpServlet {
 		
 		case "logout":
 			session.invalidate();
-			response.sendRedirect("/jw/bbs/user/login");
+			response.sendRedirect("/jw/bbs/user/list?page=1");
 			break;
 			
 		case "register":

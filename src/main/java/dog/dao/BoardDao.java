@@ -1,9 +1,8 @@
-package project.dao;
+package dog.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +13,7 @@ import javax.sql.DataSource;
 
 import project.entity.Board;
 
-
 public class BoardDao {
-
 	public Connection getConnection() {
 		Connection conn = null;
 		try {
@@ -100,7 +97,7 @@ public class BoardDao {
 	
 	public void updateBoard(Board board) {
 		Connection conn = getConnection();
-		String sql = "update board set title=?, content=?, modTime=now() where bid=?";
+		String sql = "update board set title=?, content=?, modTime=now() where bid=? ";
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, board.getTitle());
@@ -128,40 +125,38 @@ public class BoardDao {
 		}
 	}
 	
-	// field 값은 view 또는 reply
-	public void increaseCount(String field, int bid) {
-		Connection conn = getConnection();
-		String sql = "UPDATE board SET " + field + "Count=" + field + "Count+1 WHERE bid=?";
-		try {
-			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, bid);
-			
-			pstmt.executeUpdate();
-			pstmt.close(); conn.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public int getBoardCount(String field, String query) {
-		Connection conn = getConnection();
-		query = "%" + query + "%";
-		String sql = "SELECT COUNT(bid) FROM board"
-				+ "  JOIN users ON board.uid=users.uid"
-				+ "  WHERE board.isDeleted=0 and " + field + " LIKE ?";
-		int count = 0;
-		try {
-			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, query);
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				count = rs.getInt(1);
+		public void increaseCount(String field, int bid) {
+			Connection conn = getConnection();
+			String sql = "UPDATE board SET " + field + "Count=" + field + "Count+1 WHERE bid=?";
+			try {
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, bid);
+				
+				pstmt.executeUpdate();
+				pstmt.close(); conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			rs.close(); pstmt.close(); conn.close();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-		return count;
-	}
-	
+		
+		public int getBoardCount(String field, String query) {
+			Connection conn = getConnection();
+			query = "%" + query + "%";
+			String sql = "SELECT COUNT(bid) FROM board"
+					+ "  JOIN users ON board.uid=users.uid"
+					+ "  WHERE board.isDeleted=0 and " + field + " LIKE ?";
+			int count = 0;
+			try {
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, query);
+				ResultSet rs = pstmt.executeQuery();
+				while (rs.next()) {
+					count = rs.getInt(1);
+				}
+				rs.close(); pstmt.close(); conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return count;
+		}
 }

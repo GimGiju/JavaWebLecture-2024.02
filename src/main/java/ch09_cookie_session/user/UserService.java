@@ -16,9 +16,9 @@ public interface UserService {
 	
 	void updateUser(User user);				// 수정
 	
-	void deleteUser(String uid);			// 삭제
+	void deleteUser(int userId);			// 삭제
 	
-	int login(String uid, String pwd);		// 로그인 기능
+	int login(int userId, String pwd);		// 로그인 기능
 	
 //	void close();							// DB 정리 기능
 }

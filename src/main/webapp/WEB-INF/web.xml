@@ -278,4 +278,14 @@
     <servlet-name>BoardController</servlet-name>
     <url-pattern>/BoardController</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>PetUserController</display-name>
+    <servlet-name>PetUserController</servlet-name>
+    <servlet-class>pet.controller.PetUserController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PetUserController</servlet-name>
+    <url-pattern>/PetUserController</url-pattern>
+  </servlet-mapping>
 </web-app>
