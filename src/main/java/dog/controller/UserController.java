@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import project.entity.User;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,13 +15,14 @@ import java.util.List;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-import ch09_cookie_session.user.UserService;
-import ch09_cookie_session.user.UserServiceImpl;
+import dog.entity.User;
+import dog.service.UserServiceImpl;
 
-@WebServlet("/")
+@WebServlet({"/dog/user/list", "/dog/user/register", "/dog/user/update", 
+			 "/dog/user/delete", "/dog/user/login", "/dog/user/logout"})
 public class UserController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private UserService uSvc = new UserServiceImpl();
+	private UserServiceImpl uSvc = new UserServiceImpl();
        
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String[] uri = request.getRequestURI().split("/");
@@ -38,7 +39,7 @@ public class UserController extends HttpServlet {
 			String page_ = request.getParameter("page");
 			int page = (page_ == null || page_.equals("")) ? 1 : Integer.parseInt(page_);
 			session.setAttribute("currentUserPage", page);
-			List<User> userList = uSvc.getuserList(page);
+			List<User> userList = uSvc.getUserList(page);
 			request.setAttribute("userList", userList);
 			
 			// for pagination
@@ -49,13 +50,13 @@ public class UserController extends HttpServlet {
 				pageList.add(String.valueOf(i));
 			request.setAttribute("pageList", pageList);
 			
-			rd = request.getRequestDispatcher("/WEB-INF/view/user/list.jsp");
+			rd = request.getRequestDispatcher("/WEB-INF/dog/user/list.jsp");
 			rd.forward(request, response);
 			break;
 			
 		case "login":
 			if (method.equals("GET")) {
-				rd = request.getRequestDispatcher("/WEB-INF/view/user/login.jsp");
+				rd = request.getRequestDispatcher("/WEB-INF/dog/user/login.jsp");
 				rd.forward(request, response);
 			} else {
 				uid = request.getParameter("uid");
@@ -66,15 +67,15 @@ public class UserController extends HttpServlet {
 					session.setAttribute("sessUid", uid);
 					session.setAttribute("sessUname", user.getUname());
 					msg = user.getUname() + "님 환영합니다.";
-					url = "/jw/bbs/board/list?p=1";
+					url = "/jw/dog/board/list?p=1";
 				} else if (result == uSvc.WRONG_PASSWORD) {
 					msg = "패스워드가 틀립니다.";
-					url = "/jw/bbs/user/login";
+					url = "/jw/dog/user/login";
 				} else {
 					msg = "아이디 입력이 잘못되었습니다.";
-					url = "/jw/bbs/user/login";
+					url = "/jw/dog/user/login";
 				}
-				rd = request.getRequestDispatcher("/WEB-INF/view/common/alertMsg.jsp");
+				rd = request.getRequestDispatcher("/WEB-INF/dog/common/alertMsg.jsp");
 				request.setAttribute("msg", msg);
 				request.setAttribute("url", url);
 				rd.forward(request, response);
@@ -83,13 +84,13 @@ public class UserController extends HttpServlet {
 		
 		case "logout":
 			session.invalidate();
-			response.sendRedirect("/jw/bbs/user/list?page=1");
+			response.sendRedirect("/jw/dog/user/login");
 			break;
 			
 		case "register":
 			if (method.equals("GET")) {
 				session.invalidate();
-				rd = request.getRequestDispatcher("/WEB-INF/view/user/register.jsp");
+				rd = request.getRequestDispatcher("/WEB-INF/dog/user/register.jsp");
 				rd.forward(request, response);
 			} else {
 				uid = request.getParameter("uid");
@@ -98,18 +99,18 @@ public class UserController extends HttpServlet {
 				uname = request.getParameter("uname");
 				email = request.getParameter("email");
 				if (uSvc.getUserByUid(uid) != null) {
-					rd = request.getRequestDispatcher("/WEB-INF/view/common/alertMsg.jsp");
+					rd = request.getRequestDispatcher("/WEB-INF/dog/common/alertMsg.jsp");
 					request.setAttribute("msg", "아이디가 중복입니다.");
-					request.setAttribute("url", "/jw/bbs/user/register");
+					request.setAttribute("url", "/jw/dog/user/register");
 					rd.forward(request, response); 
 				} else if (pwd.equals(pwd2)) {
 					user = new User(uid, pwd, uname, email);
 					uSvc.registerUser(user);
-					response.sendRedirect("/jw/bbs/user/list?page=1");
+					response.sendRedirect("/jw/dog/user/list?page=1");
 				} else {
-					rd = request.getRequestDispatcher("/WEB-INF/view/common/alertMsg.jsp");
+					rd = request.getRequestDispatcher("/WEB-INF/dog/common/alertMsg.jsp");
 					request.setAttribute("msg", "패스워드 입력이 잘못되었습니다.");
-					request.setAttribute("url", "/jw/bbs/user/register");
+					request.setAttribute("url", "/jw/dog/user/register");
 					rd.forward(request, response);
 				}
 			}
@@ -119,7 +120,7 @@ public class UserController extends HttpServlet {
 			if (method.equals("GET")) {
 				uid = request.getParameter("uid");
 				user = uSvc.getUserByUid(uid);
-				rd = request.getRequestDispatcher("/WEB-INF/view/user/update.jsp");
+				rd = request.getRequestDispatcher("/WEB-INF/dog/user/update.jsp");
 				request.setAttribute("user", user);
 				rd.forward(request, response);
 			} else {
@@ -133,7 +134,7 @@ public class UserController extends HttpServlet {
 					hashedPwd = BCrypt.hashpw(pwd, BCrypt.gensalt());
 				user = new User(uid, hashedPwd, uname, email);
 				uSvc.updateUser(user);
-				response.sendRedirect("/jw/bbs/user/list?page=1");
+				response.sendRedirect("/jw/dog/user/list?page=1");
 			}
 			break;
 			
@@ -143,7 +144,7 @@ public class UserController extends HttpServlet {
 			String sessUid = (String) session.getAttribute("sessUid");
 			if (!sessUid.equals("admin"))
 				session.invalidate();
-			response.sendRedirect("/jw/bbs/user/list?page=1");
+			response.sendRedirect("/jw/dog/user/list?page=1");
 			break;
 		}
 	}

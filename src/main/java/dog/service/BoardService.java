@@ -9,7 +9,7 @@ public interface BoardService {
 
 	List<Board> getBoardList(int page, String field, String query);
 	
-	Board getBoard(int bid);
+	Board getBoard(int boardId);
 	
 	int getBoardCount(String field, String query);
 	
@@ -17,9 +17,9 @@ public interface BoardService {
 	
 	void updateBoard(Board board);
 	
-	void deleteBoard(int bid);
+	void deleteBoard(int boardId);
 	
-	void increaseViewCount(int bid);		// 조회수 증가
+	void increaseViewCount(int boardId);		// 조회수 증가
 	
-	void increaseReplyCount(int bid);		// 댓글 증가
+	void increaseReplyCount(int boardId);		// 댓글 증가
 }

@@ -12,6 +12,17 @@ public class Dog {
 
 	public Dog() { }
 
+	
+	public Dog(int dogId, LocalDate bDate, String breed, String gender, String dname, int userId) {
+		this.dogId = dogId;
+		this.bDate = bDate;
+		this.breed = breed;
+		this.gender = gender;
+		this.dname = dname;
+		this.userId = userId;
+	}
+
+
 	@Override
 	public String toString() {
 		return "Dog [dogId=" + dogId + ", bDate=" + bDate + ", breed=" + breed + ", gender=" + gender + ", dname="

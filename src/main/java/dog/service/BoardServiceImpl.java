@@ -2,55 +2,57 @@ package dog.service;
 
 import java.util.List;
 
+import dog.dao.BoardDao;
 import dog.entity.Board;
 
+
+
 public class BoardServiceImpl implements BoardService {
+	private BoardDao bDao = new BoardDao();
 
 	@Override
 	public List<Board> getBoardList(int page, String field, String query) {
-		// TODO Auto-generated method stub
-		return null;
+		int offset = (page - 1) * COUNT_PER_PAGE;
+		query = "%" + query + "%";
+		List<Board> list = bDao.getBoardList(field, query, COUNT_PER_PAGE, offset);
+		return list;
 	}
 
 	@Override
-	public Board getBoard(int bid) {
-		// TODO Auto-generated method stub
-		return null;
+	public Board getBoard(int boardId) {
+		return bDao.getBoard(boardId);
 	}
 
 	@Override
 	public int getBoardCount(String field, String query) {
-		// TODO Auto-generated method stub
-		return 0;
+		return bDao.getBoardCount(field, query);
+	}
+
+
+	@Override
+	public void deleteBoard(int boardId) {
+		bDao.deleteBoard(boardId);
+	}
+
+	@Override
+	public void increaseViewCount(int boardId) {
+		bDao.increaseCount("view", boardId);
+	}
+
+	@Override
+	public void increaseReplyCount(int boardId) {
+		bDao.increaseCount("reply", boardId);
 	}
 
 	@Override
 	public void insertBoard(Board board) {
-		// TODO Auto-generated method stub
+		bDao.insertBoard(board);
 		
 	}
 
 	@Override
 	public void updateBoard(Board board) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void deleteBoard(int bid) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void increaseViewCount(int bid) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void increaseReplyCount(int bid) {
-		// TODO Auto-generated method stub
+		bDao.updateBoard(board);
 		
 	}
 

@@ -11,14 +11,14 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
-import project.entity.Board;
+import dog.entity.Board;
 
 public class BoardDao {
 	public Connection getConnection() {
 		Connection conn = null;
 		try {
 			Context initContext = new InitialContext();
-			DataSource ds = (DataSource) initContext.lookup("java:comp/env/" + "jdbc/bbs");
+			DataSource ds = (DataSource) initContext.lookup("java:comp/env/" + "jdbc/dog");
 			conn = ds.getConnection();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -26,21 +26,21 @@ public class BoardDao {
 		return conn;
 	}
 	
-	public Board getBoard(int bid) {
+	public Board getBoard(int boardId) {
 		Connection conn = getConnection();
-		String sql = "SELECT b.*, u.uname FROM board b"
-					+ "	JOIN users u ON b.uid=u.uid"
-					+ "	WHERE b.bid=?";
+		String sql = "SELECT b.*, u.uid FROM board b"
+					+ "	JOIN user u ON b.uid=u.uid"
+					+ "	WHERE b.boardId=?";
 		Board board = null;
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, bid);
+			pstmt.setInt(1, boardId);
 			
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				board = new Board(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), 
-						LocalDateTime.parse(rs.getString(5).replace(" ", "T")),
-						rs.getInt(6), rs.getInt(7), rs.getInt(8), rs.getString(9));
+				board = new Board(rs.getInt(1), rs.getString(2), rs.getString(3),  
+						LocalDateTime.parse(rs.getString(4).replace(" ", "T")), rs.getInt(5),
+						rs.getInt(6), rs.getInt(7),  rs.getString(8));
 			}
 			rs.close(); pstmt.close(); conn.close();
 		} catch (Exception e) {
@@ -53,10 +53,10 @@ public class BoardDao {
 	// query 값은 검색어
 	public List<Board> getBoardList(String field, String query, int num, int offset) {
 		Connection conn = getConnection();
-		String sql = "SELECT b.*, u.uname FROM board b"
-					+ "	JOIN users u ON b.uid=u.uid"
+		String sql = "SELECT b.*, u.uid FROM board b"
+					+ "	JOIN user u ON b.uid=u.uid"
 					+ "	WHERE b.isDeleted=0 AND " + field + " LIKE ?"
-					+ "	ORDER BY bid DESC "
+					+ "	ORDER BY boardId DESC "
 					+ "	LIMIT ? OFFSET ?";
 		List<Board> list = new ArrayList<Board>();
 		try {
@@ -67,9 +67,9 @@ public class BoardDao {
 			
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				Board board = new Board(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), 
-						LocalDateTime.parse(rs.getString(5).replace(" ", "T")),
-						rs.getInt(6), rs.getInt(7), rs.getInt(8), rs.getString(9));
+				Board board = new Board(rs.getInt(1), rs.getString(2), rs.getString(3),  
+						LocalDateTime.parse(rs.getString(4).replace(" ", "T")), rs.getInt(5),
+						rs.getInt(6), rs.getInt(7),  rs.getString(8));
 				list.add(board);
 			}
 			rs.close(); pstmt.close(); conn.close();
@@ -81,12 +81,11 @@ public class BoardDao {
 	
 	public void insertBoard(Board board) {
 		Connection conn = getConnection();
-		String sql = "insert into board values (default, ?, ?, ?, default, default, default, default)";
+		String sql = "insert into board values (default, ?, ?, default, default, default, default)";
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, board.getTitle());
 			pstmt.setString(2, board.getContent());
-			pstmt.setString(3, board.getUid());
 			
 			pstmt.executeUpdate();
 			pstmt.close(); conn.close();
@@ -97,12 +96,12 @@ public class BoardDao {
 	
 	public void updateBoard(Board board) {
 		Connection conn = getConnection();
-		String sql = "update board set title=?, content=?, modTime=now() where bid=? ";
+		String sql = "update board set title=?, content=?, modTime=now() where boardId=? ";
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, board.getTitle());
 			pstmt.setString(2, board.getContent());
-			pstmt.setInt(3, board.getBid());
+			pstmt.setInt(3, board.getBoardId());
 			
 			pstmt.executeUpdate();
 			pstmt.close(); conn.close();
@@ -111,12 +110,12 @@ public class BoardDao {
 		}
 	}
 	
-	public void deleteBoard(int bid) {
+	public void deleteBoard(int boardId) {
 		Connection conn = getConnection();
-		String sql = "update board set isDeleted=1 where bid=?";
+		String sql = "update board set isDeleted=1 where boardId=?";
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, bid);
+			pstmt.setInt(1, boardId);
 			
 			pstmt.executeUpdate();
 			pstmt.close(); conn.close();
@@ -125,12 +124,12 @@ public class BoardDao {
 		}
 	}
 	
-		public void increaseCount(String field, int bid) {
+		public void increaseCount(String field, int boardId) {
 			Connection conn = getConnection();
-			String sql = "UPDATE board SET " + field + "Count=" + field + "Count+1 WHERE bid=?";
+			String sql = "UPDATE board SET " + field + "Count=" + field + "Count+1 WHERE boardId=?";
 			try {
 				PreparedStatement pstmt = conn.prepareStatement(sql);
-				pstmt.setInt(1, bid);
+				pstmt.setInt(1, boardId);
 				
 				pstmt.executeUpdate();
 				pstmt.close(); conn.close();
@@ -142,8 +141,8 @@ public class BoardDao {
 		public int getBoardCount(String field, String query) {
 			Connection conn = getConnection();
 			query = "%" + query + "%";
-			String sql = "SELECT COUNT(bid) FROM board"
-					+ "  JOIN users ON board.uid=users.uid"
+			String sql = "SELECT COUNT(boardId) FROM board"
+					+ "  JOIN user ON board.uid=user.uid"
 					+ "  WHERE board.isDeleted=0 and " + field + " LIKE ?";
 			int count = 0;
 			try {

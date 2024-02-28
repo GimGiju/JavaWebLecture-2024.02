@@ -3,7 +3,6 @@ package dog.entity;
 import java.time.LocalDate;
 
 public class User {
-	private int userId;
 	private String uid;
 	private String pwd;
 	private String uname;
@@ -14,12 +13,6 @@ public class User {
 
 	public User() { }
 	
-	public User(int userId, String pwd, String uname, String email) {
-		this.userId = userId;
-		this.pwd = pwd;
-		this.uname = uname;
-		this.email = email;
-	}
 
 	public User(String uid, String pwd, String uname, String email) {
 		this.uid = uid;
@@ -28,17 +21,9 @@ public class User {
 		this.email = email;
 	}
 
-	public User(int userId, String uid, String pwd, String uname, String email) {
-		this.userId = userId;
-		this.uid = uid;
-		this.pwd = pwd;
-		this.uname = uname;
-		this.email = email;
-	}
 
-	public User(int userId, String uid, String pwd, String uname, String email, LocalDate regDate, int isDeleted,
+	public User(String uid, String pwd, String uname, String email, LocalDate regDate, int isDeleted,
 			int balance) {
-		this.userId = userId;
 		this.uid = uid;
 		this.pwd = pwd;
 		this.uname = uname;
@@ -50,17 +35,10 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", uid=" + uid + ", pwd=" + pwd + ", uname=" + uname + ", email=" + email
+		return "User [uid=" + uid + ", pwd=" + pwd + ", uname=" + uname + ", email=" + email
 				+ ", regDate=" + regDate + ", isDeleted=" + isDeleted + ", balance=" + balance + "]";
 	}
 
-	public int getUserId() {
-		return userId;
-	}
-
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
 
 	public String getUid() {
 		return uid;
