@@ -5,13 +5,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<%@ include file="/WEB-INF/dog/common/_head.jspf" %>
+	<%@ include file="../common/_head.jspf" %>
 	<style>
 		td, th { text-align: center; }
 	</style>
 </head>
 <body>
-	<%@ include file="/WEB-INF/dog/common/_top.jspf" %>
+	<%@ include file="../common/_top.jspf" %>
 	
 	<div class="container" style="margin-top:80px">
 			
@@ -21,9 +21,9 @@
 				<div class="row">
 					<div class="col-1"></div>
 					<div class="col-10">
-						<form action="/jw/bbs/board/update" method="post">
-							<input type="hidden" name="bid" value="${board.bid}">		<!--  히든으로 보이지 않게 하고 bid값을 줌 -->
-							<input type="hidden" name="uid" value="${board.uid}">
+						<form action="/jw/dog/board/update" method="post">
+							<input type="hidden" name="boardId" value="${board.boardId}">		<!--  히든으로 보이지 않게 하고 bid값을 줌 -->
+							<input type="hidden" name="uId" value="${board.uId}">
 		         		     <table class="table table-borderless">
 		            		    <tr>
 		                		  <td style="width: 10%;"><label class="col-form-label">제목</label></td>
@@ -47,7 +47,7 @@
 						<!-- ====================== 본문 영역 =========================== -->
 		</div>
 	
-	<%@ include file="/WEB-INF/dog/common/_bottom.jspf" %>
+	<%@ include file="../common/_bottom.jspf" %>
 	
 </body>
 </html>

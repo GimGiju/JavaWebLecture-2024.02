@@ -29,7 +29,7 @@ public class DogDao {
 	
 	public Dog getUserByDid(int dogId) {
 		Connection conn = getConnection();
-		String sql = "select * from users where dogId=?";
+		String sql = "select * from user where dogId=?";
 		Dog dog = null;
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);

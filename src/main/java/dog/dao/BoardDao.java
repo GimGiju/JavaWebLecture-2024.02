@@ -28,8 +28,8 @@ public class BoardDao {
 	
 	public Board getBoard(int boardId) {
 		Connection conn = getConnection();
-		String sql = "SELECT b.*, u.uid FROM board b"
-					+ "	JOIN user u ON b.uid=u.uid"
+		String sql = "SELECT b.*, u.uId FROM board b"
+					+ "	JOIN user u ON b.uId=u.uId"
 					+ "	WHERE b.boardId=?";
 		Board board = null;
 		try {
@@ -49,12 +49,12 @@ public class BoardDao {
 		return board;
 	}
 
-	// field 값은 title, content, uid 등 attribute name
+	// field 값은 title, content, uId 등 attribute name
 	// query 값은 검색어
 	public List<Board> getBoardList(String field, String query, int num, int offset) {
 		Connection conn = getConnection();
-		String sql = "SELECT b.*, u.uid FROM board b"
-					+ "	JOIN user u ON b.uid=u.uid"
+		String sql = "SELECT b.*, u.uId FROM board b"
+					+ "	JOIN user u ON b.uId=u.uId"
 					+ "	WHERE b.isDeleted=0 AND " + field + " LIKE ?"
 					+ "	ORDER BY boardId DESC "
 					+ "	LIMIT ? OFFSET ?";
@@ -64,7 +64,7 @@ public class BoardDao {
 			pstmt.setString(1, query);
 			pstmt.setInt(2, num);
 			pstmt.setInt(3, offset);
-			
+
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				Board board = new Board(rs.getInt(1), rs.getString(2), rs.getString(3),  
@@ -81,12 +81,13 @@ public class BoardDao {
 	
 	public void insertBoard(Board board) {
 		Connection conn = getConnection();
-		String sql = "insert into board values (default, ?, ?, default, default, default, default)";
+		String sql = "insert into board values (default, ?, ?, default, default, default, default, ?)";
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, board.getTitle());
 			pstmt.setString(2, board.getContent());
-			
+			pstmt.setString(3, board.getuId());
+
 			pstmt.executeUpdate();
 			pstmt.close(); conn.close();
 		} catch (Exception e) {
@@ -142,7 +143,7 @@ public class BoardDao {
 			Connection conn = getConnection();
 			query = "%" + query + "%";
 			String sql = "SELECT COUNT(boardId) FROM board"
-					+ "  JOIN user ON board.uid=user.uid"
+					+ "  JOIN user ON board.uId=user.uId"
 					+ "  WHERE board.isDeleted=0 and " + field + " LIKE ?";
 			int count = 0;
 			try {

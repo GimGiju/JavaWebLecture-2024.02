@@ -4,6 +4,7 @@ import java.util.List;
 
 import dog.dao.BoardDao;
 import dog.entity.Board;
+import dog.entity.Reply;
 
 
 
@@ -55,5 +56,24 @@ public class BoardServiceImpl implements BoardService {
 		bDao.updateBoard(board);
 		
 	}
+
+	@Override
+	public void update(Reply reply) {
+	
+	}
+
+	@Override
+	public void insert(Reply reply) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<Reply> getReplyList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 
 }

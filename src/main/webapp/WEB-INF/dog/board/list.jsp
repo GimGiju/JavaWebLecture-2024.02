@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<%@ include file="/WEB-INF/dog/common/_head.jspf" %>
+	<%@ include file="../common/_head.jspf" %>
 	<style>
 		td, th { text-align: center; }
 	</style>
@@ -19,7 +19,7 @@
 	</script>
 </head>
 <body>
-	<%@ include file="/WEB-INF/dog/common/_top.jspf" %>
+	<%@ include file="../common/_top.jspf" %>
 	
 	<div class="container" style="margin-top:80px; text-align: center">
 		<div class="row">
@@ -34,7 +34,7 @@
 							<select class="form-control" id="field">
 								<option value="title" ${field eq 'title' ? 'selected' : '' }>제목</option>
 								<option value="content" ${field eq 'content' ? 'selected' : '' }>본문</option>
-								<option value="uname" ${field eq 'uname' ? 'selected' : '' }>글쓴이</option>
+								<option value="uId" ${field eq 'uId' ? 'selected' : '' }>글쓴이</option>
 							</select>
 						</td>
 						<td style="width: 24%">
@@ -63,14 +63,14 @@
 				</tr>
 					<c:forEach var="board" items="${boardList}">
 					<tr>
-						<td>${board.bid}</td>
+						<td>${board.boardId}</td>
 						<td>
-							<a href="/jw/dog/board/detail?bid=${board.bid}&uid=${board.uid}">${board.title}</a>
+							<a href="/jw/dog/board/detail?boardId=${board.boardId}&uid=${board.uId}">${board.title}</a>
 							<c:if test="${board.replyCount ge 1}">
 								<span class="text-danger">[${board.replyCount}]</span>
 							</c:if>
 						</td>
-						<td>${board.uname}</td>
+						<td>${board.uId}</td>
 						<td>${fn:substring(fn:replace(board.modTime, "T", " "), 2, 16)}</td>
 						<td>${board.viewCount}</td>
 					</tr>
@@ -89,7 +89,7 @@
 			</div>
 		</div>
 	
-	<%@ include file="/WEB-INF/dog/common/_bottom.jspf" %>
+	<%@ include file="../common/_bottom.jspf" %>
 	
 </body>
 </html>

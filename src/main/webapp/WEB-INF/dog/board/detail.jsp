@@ -6,20 +6,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<%@ include file="/WEB-INF/dog/common/_head.jspf" %>
+	<%@ include file="../common/_head.jspf" %>
 	<style>
 		td, th { text-align: center; }
 	</style>
-<script>
- function deleteFunc(bid) {
-			$('#deleteBid').val(bid);
+	<script>
+ 		function deleteFunc(boardId) {
+ 			//console.log(boardId);
+			$('#deleteBoardId').val(boardId);
 			$('#deleteModal').modal('show');
 		}
 	</script>
+	
 
 </head>
 <body>
-	<%@ include file="/WEB-INF/dog/common/_top.jspf" %>
+	<%@ include file="../common/_top.jspf" %>
 	
 	<div class="container" style="margin-top:80px">
 		<div class="row">
@@ -27,27 +29,27 @@
 			<!-- ====================== 본문 영역 =========================== -->
 		<div class="col-9">
 			<h3><strong class="me-5">게시글 보기</strong>
-				<c:if test="${sessUid eq board.uid}">	<!-- 본인만 수정 가능 -->
-					<span style="font-size: 16px">
-						<a href="/jw/bbs/board/update?bid=${board.bid}"><i class="fa-solid fa-file-pen"></i>수정</a>
-						<a href="javascript:deleteFunc('${board.bid}')"><i class="fa-solid fa-trash ms-3"></i>삭제</a> <!--  onclick="del()" -->
-					</span>
+				<span style="font-size: 16px">
+						<a href="/jw/dog/board/list?p=${currentBoardPage}&f=${field}&q=${query}"><i class="fa-solid fa-table-list"></i>목록</a>
+				<c:if test="${sessUid eq board.uId}">	<!-- 본인만 수정 가능 -->
+						<a href="/jw/dog/board/update?boardId=${board.boardId}"><i class="fa-solid fa-file-pen ms-3"></i>수정</a>
+						<a href="javascript:deleteFunc('${board.boardId}')"><i class="fa-solid fa-trash ms-3"></i>삭제</a> <!--  onclick="del()" -->
+				
 				</c:if>
-				<c:if test="${sessUid ne board.uid}">	
-					<span style="font-size: 16px">
-						<a href="#" class="disabled-link"><i class="fa-solid fa-file-pen"></i>수정</a>
+				<c:if test="${sessUid ne board.uId}">	
+						<a href="#" class="disabled-link"><i class="fa-solid fa-file-pen ms-3"></i>수정</a>
 						<a href="#" class="disabled-link"><i class="fa-solid fa-trash ms-3"></i>삭제</a>
-					</span>
 				</c:if>
+				</span>
 			</h3>
 			<hr>
 			<div class="row">
 				<div class="col-8">
 					<h5>${board.title}</h5>
-					<h6>글 번호: ${board.bid} | ${fn:replace(board.modTime, "T", " ")}</h6>
+					<h6>글 번호: ${board.boardId} | ${fn:replace(board.modTime, "T", " ")}</h6>
 				</div>
 				<div class="col-4 text-end"></div>
-					<h5>${board.uname}</h5>
+					<h5>${board.uId}</h5>
 					<h6>조회 ${board.viewCount} &nbsp;&nbsp; 댓글 ${board.replyCount}</h6>
 				</div>
 				<hr>
@@ -59,7 +61,7 @@
 		</div>
 	</div>
 	
-	<%@ include file="/WEB-INF/dog/common/_bottom.jspf" %>
+	<%@ include file="../common/_bottom.jspf" %>
 	
 	<div class="modal" id="deleteModal">
 		<div class="modal-dialog">
@@ -74,8 +76,8 @@
 				<div class="modal-body">
 					<strong>정말로 삭제하시겠습니까?</strong>
 					<div class="text-center mt-5">
-						<form action="/jw/bbs/board/delete" method="post">
-							<input type="hidden" id="deleteBid" name="bid">
+						<form action="/jw/dog/board/delete" method="post">
+							<input type="hidden" id="deleteBoardId" name="boardId">
 							<button class="btn btn-danger" type="submit">삭제</button>
 						</form>
 					</div>

@@ -30,7 +30,7 @@ public class BoardController extends HttpServlet {
 		String method = request.getMethod();
 		HttpSession session = request.getSession();
 		RequestDispatcher rd = null;
-		String title = "", content = "", field = "", query = "", page_ = "", uid = "";
+		String title = "", content = "", field = "", query = "", page_ = "", uId = "";
 		Board board = null;
 		int boardId = 0, page = 0;
 		String sessUid = (String) session.getAttribute("sessUid");
@@ -82,8 +82,8 @@ public class BoardController extends HttpServlet {
 		
 		case "detail":
 			boardId = Integer.parseInt(request.getParameter("boardId"));
-			uid = request.getParameter("uid");
-			if (!uid.equals(sessUid))
+			uId = request.getParameter("uId");
+			if (uId != null && uId.equals(sessUid));
 				bSvc.increaseViewCount(boardId);
 			
 			board = bSvc.getBoard(boardId);
@@ -115,13 +115,13 @@ public class BoardController extends HttpServlet {
 				rd.forward(request, response);
 			} else {
 				boardId = Integer.parseInt(request.getParameter("boardId"));
-				uid = request.getParameter("uid");
+				uId = request.getParameter("uId");
 				title = request.getParameter("title");
 				content = request.getParameter("content");
 				board = new Board(boardId, title, content);
 				
 				bSvc.updateBoard(board);
-				response.sendRedirect("/jw/dog/board/detail?boardId=" + boardId + "&uid=" + uid);
+				response.sendRedirect("/jw/dog/board/detail?boardId=" + boardId + "&uId=" + uId);
 			}
 			break;
 		}

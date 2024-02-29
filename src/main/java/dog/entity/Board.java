@@ -10,14 +10,14 @@ public class Board {
 	private int isDeleted;
 	private int viewCount;
 	private int replyCount;
-	private String uid;
+	private String uId;
 
 	public Board() { }
 
-	public Board(String title, String content, String uid) {
+	public Board(String title, String content, String uId) {
 		this.title = title;
 		this.content = content;
-		this.uid = uid;
+		this.uId = uId;
 	}
 
 	public Board(int boardId, String title, String content) {
@@ -26,15 +26,16 @@ public class Board {
 		this.content = content;
 	}
 
-	public Board(int boardId, String title, String content, LocalDateTime modTime) {
+	public Board(int boardId, String title, String content, String uId) {
 		this.boardId = boardId;
 		this.title = title;
 		this.content = content;
-		this.modTime = modTime;
+		this.uId = uId;
 	}
-
+	
+	
 	public Board(int boardId, String title, String content, LocalDateTime modTime, int isDeleted, int viewCount,
-			int replyCount, String uid) {
+			int replyCount, String uId) {
 		this.boardId = boardId;
 		this.title = title;
 		this.content = content;
@@ -42,14 +43,14 @@ public class Board {
 		this.isDeleted = isDeleted;
 		this.viewCount = viewCount;
 		this.replyCount = replyCount;
-		this.uid = uid;
+		this.uId = uId;
 	}
 
 	@Override
 	public String toString() {
 		return "Board [boardId=" + boardId + ", title=" + title + ", content=" + content + ", modTime=" + modTime
-				+ ", isDeleted=" + isDeleted + ", viewCount=" + viewCount + ", replyCount=" + replyCount + ", uid="
-				+ uid + "]";
+				+ ", isDeleted=" + isDeleted + ", viewCount=" + viewCount + ", replyCount=" + replyCount + ", uId="
+				+ uId + "]";
 	}
 
 	public int getBoardId() {
@@ -108,13 +109,12 @@ public class Board {
 		this.replyCount = replyCount;
 	}
 
-	public String getUid() {
-		return uid;
+	public String getuId() {
+		return uId;
 	}
 
-	public void setUid(String uid) {
-		this.uid = uid;
+	public void setuId(String uId) {
+		this.uId = uId;
 	}
-
 	
 }

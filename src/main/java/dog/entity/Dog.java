@@ -8,25 +8,25 @@ public class Dog {
 	private String breed;
 	private String gender;
 	private String dname;
-	private int userId;
+	private int uId;
 
 	public Dog() { }
 
 	
-	public Dog(int dogId, LocalDate bDate, String breed, String gender, String dname, int userId) {
+	public Dog(int dogId, LocalDate bDate, String breed, String gender, String dname, int uId) {
 		this.dogId = dogId;
 		this.bDate = bDate;
 		this.breed = breed;
 		this.gender = gender;
 		this.dname = dname;
-		this.userId = userId;
+		this.uId = uId;
 	}
 
 
 	@Override
 	public String toString() {
 		return "Dog [dogId=" + dogId + ", bDate=" + bDate + ", breed=" + breed + ", gender=" + gender + ", dname="
-				+ dname + ", userId=" + userId + "]";
+				+ dname + ", uId=" + uId + "]";
 	}
 
 	public int getDogId() {
@@ -69,12 +69,12 @@ public class Dog {
 		this.dname = dname;
 	}
 
-	public int getUserId() {
-		return userId;
+	public int getUid() {
+		return uId;
 	}
 
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void setUid(int uId) {
+		this.uId = uId;
 	}
 	
 }
