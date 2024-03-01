@@ -18,7 +18,7 @@ public interface BoardService {
 	
 	void updateBoard(Board board);				// 보드 수정
 	
-	void deleteBoard(int boardId);				// 삭제
+	void deleteBoard(int boardId);
 	
 	void increaseViewCount(int boardId);		// 조회수 증가
 	

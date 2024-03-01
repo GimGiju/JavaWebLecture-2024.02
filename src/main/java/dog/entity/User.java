@@ -22,8 +22,16 @@ public class User {
 	}
 
 
+	public User(String uId, String pwd, String uname, String email, int balance) {
+		this.uId = uId;
+		this.pwd = pwd;
+		this.uname = uname;
+		this.email = email;
+		this.balance = balance;
+	}
+
 	public User(String uId, String pwd, String uname, String email, LocalDate regDate, int isDeleted,
-			int balance) {
+				int balance) {
 		this.uId = uId;
 		this.pwd = pwd;
 		this.uname = uname;

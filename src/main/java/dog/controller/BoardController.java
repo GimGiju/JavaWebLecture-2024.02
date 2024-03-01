@@ -1,5 +1,9 @@
 package dog.controller;
 
+import dog.entity.User;
+import dog.service.BoardService;
+import dog.service.UserService;
+import dog.service.UserServiceImpl;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,12 +21,16 @@ import java.util.List;
 import dog.entity.Board;
 import dog.entity.Reply;
 import dog.service.BoardServiceImpl;
+import dog.service.ReplyService;
+import dog.service.ReplyServiceImpl;
 
 @WebServlet({"/dog/board/list", "/dog/board/insert", "/dog/board/update", 
 			 "/dog/board/delete", "/dog/board/detail"})
 public class BoardController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private BoardServiceImpl bSvc = new BoardServiceImpl();
+	private BoardService bSvc = new BoardServiceImpl();
+	private UserService uSvc = new UserServiceImpl();
+	private ReplyService rSvc = new ReplyServiceImpl();
        
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String[] uri = request.getRequestURI().split("/");
@@ -30,15 +38,16 @@ public class BoardController extends HttpServlet {
 		String method = request.getMethod();
 		HttpSession session = request.getSession();
 		RequestDispatcher rd = null;
-		String title = "", content = "", field = "", query = "", page_ = "", uId = "";
+		String title = "", content = "", field = "", query = "", page_ = "", uId = "", comment = "";
 		Board board = null;
-		int boardId = 0, page = 0;
+		Reply reply = null;
+		int boardId = 0, page = 0, replyId = 0;
 		String sessUid = (String) session.getAttribute("sessUid");
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
 		
 		switch(action) {
-		case "list":			// /jw/dog/board/list?p=1&f=title&q=검색
+		case "list":			
 			page_ = request.getParameter("p");
 			field = request.getParameter("f");
 			query = request.getParameter("q");
@@ -76,29 +85,61 @@ public class BoardController extends HttpServlet {
 				content = request.getParameter("content");
 				board = new Board(title, content, sessUid);
 				bSvc.insertBoard(board);
+				
+				comment = request.getParameter("comment");	
+			    reply = new Reply(comment, board.getBoardId(), sessUid);
+                rSvc.insertReply(reply);
+				
+				int sessBalance = (int) session.getAttribute("sessBalance");
+				sessBalance += 100;
+				session.setAttribute("sessBalance",sessBalance);
+				User user = uSvc.getUserByUid(sessUid);
+				user.setBalance(sessBalance);
+				uSvc.updateUser(user);
+
+
 				response.sendRedirect("/jw/dog/board/list?p=1");
 			}
 			break;
 		
 		case "detail":
 			boardId = Integer.parseInt(request.getParameter("boardId"));
-			uId = request.getParameter("uId");
-			if (uId != null && uId.equals(sessUid));
-				bSvc.increaseViewCount(boardId);
-			
 			board = bSvc.getBoard(boardId);
-			request.setAttribute("board", board);
+			uId = board.getuId();
+			if ((!uId.equals(sessUid)) && sessUid!=null)
+				bSvc.increaseViewCount(boardId);
+			if (method.equals("GET")) {
+				rd = request.getRequestDispatcher("/WEB-INF/dog/board/detail.jsp");
+				rd.forward(request, response);
+				System.out.println("여기네");
+			}else {
+				title = request.getParameter("title");
+				content = request.getParameter("content");
+				board = new Board(title, content, sessUid);
+				bSvc.insertBoard(board);
+				
+				comment = request.getParameter("comment");	
+			    reply = new Reply(comment, board.getBoardId(), sessUid);
+                rSvc.insertReply(reply);
+                board = bSvc.getBoard(boardId);
+    			System.out.println("board -=----====================" + board);
+    			request.setAttribute("board", board);
+    			 // 댓글 목록을 가져올 때 field를 "boardId"로 설정
+    			List<Reply> replyList = rSvc.getReplyList(boardId); 
+    		    request.setAttribute("replyList", replyList);
+    		    
+    		    
+    		    rd = request.getRequestDispatcher("/WEB-INF/dog/board/detail.jsp");
+    		    rd.forward(request, response);
+			}
 			
-			List<Reply> replyList = null;			// 댓글 목록 필요!!!
-			request.setAttribute("replyList", replyList);
-			
-			rd = request.getRequestDispatcher("/WEB-INF/dog/board/detail.jsp");
-			rd.forward(request, response);
 			break;
 			
 		case "delete":
 			boardId = Integer.parseInt(request.getParameter("boardId"));
 			bSvc.deleteBoard(boardId);
+			replyId = Integer.parseInt(request.getParameter("replyId"));
+			rSvc.deleteReply(replyId);
 			page = (Integer) session.getAttribute("currentBoardPage");
 			field = (String) session.getAttribute("field");
 			query = (String) session.getAttribute("query");
@@ -111,6 +152,9 @@ public class BoardController extends HttpServlet {
 				boardId = Integer.parseInt(request.getParameter("boardId"));
 				board = bSvc.getBoard(boardId);
 				request.setAttribute("board", board);
+				
+//				replyId = Integer.parseInt(request.getParameter("replyId"));
+//				reply = rSvc.getReply(replyId);
 				rd = request.getRequestDispatcher("/WEB-INF/dog/board/update.jsp");
 				rd.forward(request, response);
 			} else {
@@ -121,10 +165,19 @@ public class BoardController extends HttpServlet {
 				board = new Board(boardId, title, content);
 				
 				bSvc.updateBoard(board);
-				response.sendRedirect("/jw/dog/board/detail?boardId=" + boardId + "&uId=" + uId);
+				
+//				replyId = Integer.parseInt(request.getParameter("replyId"));
+//				comment = request.getParameter("comment");
+//				reply = new Reply(replyId, comment);
+//				rSvc.updateReply(reply);
+				response.sendRedirect("/jw/dog/board/detail?boardId=" + boardId + "&uId=" + uId );
 			}
 			break;
+	
+
 		}
-	}
+		}
+		
+	
 
 }

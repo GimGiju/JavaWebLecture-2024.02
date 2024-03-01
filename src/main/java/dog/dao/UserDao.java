@@ -111,13 +111,14 @@ public class UserDao {
 
     public static void updateUser(User user) {
         Connection conn = getConnection();
-        String sql = "update user set pwd=?, uname=?, email=? where uId=?";
+        String sql = "update user set pwd=?, uname=?, email=?, balance=? where uId=?";
         try {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, user.getPwd());
             pstmt.setString(2, user.getUname());
             pstmt.setString(3, user.getEmail());
-            pstmt.setString(4, user.getuId());
+            pstmt.setInt(4, user.getBalance());
+            pstmt.setString(5, user.getuId());
 
             pstmt.executeUpdate();
             pstmt.close(); conn.close();

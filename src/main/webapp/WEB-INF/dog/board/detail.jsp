@@ -43,26 +43,24 @@
 				</span>
 			</h3>
 			<hr>
-			<div class="row">
-				<div class="col-8">
-					<h5>${board.title}</h5>
-					<h6>글 번호: ${board.boardId} | ${fn:replace(board.modTime, "T", " ")}</h6>
-				</div>
-				<div class="col-4 text-end"></div>
-					<h5>${board.uId}</h5>
-					<h6>조회 ${board.viewCount} &nbsp;&nbsp; 댓글 ${board.replyCount}</h6>
-				</div>
-				<hr>
-				<div class="col-12">
-					${fn:replace(board.content, newline, '<br>')}
-				</div>
-			</div>
+            <div class="row">
+                <h3><strong>${board.title}</strong></h3>
+                <div class="col-12 text-end">
+                    <h6>글 번호: ${board.boardId} | ${fn:replace(board.modTime, "T", " ")}</h6>
+                    <h6>조회 ${board.viewCount} &nbsp;&nbsp; 댓글 ${board.replyCount}</h6>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-12">
+                    ${fn:replace(board.content, newline, '<br>')}
+                </div>
+            </div>
 						<!-- ====================== 본문 영역 =========================== -->
-		</div>
+        </div>
 	</div>
 	
 	<%@ include file="../common/_bottom.jspf" %>
-	
 	<div class="modal" id="deleteModal">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -85,6 +83,25 @@
 			</div>
 		</div>
 	</div>
-	
+
+    <div class="row mt-4">
+        <div class="col-9">
+            <form action="/jw/dog/board/detail?boardId=${board.boardId }" method="post">
+                <input type="hidden" name="boardId" value="${board.boardId}">
+                <div class="row mb-2">
+                    <div class="col-lg-12">
+                        <textarea class="form-control" id="comment" name="comment" rows="3" placeholder="댓글을 입력해주세요."></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <button type="submit" class="btn btn-primary btn-sm">등록</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
 </body>
 </html>

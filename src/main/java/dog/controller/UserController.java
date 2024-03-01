@@ -64,13 +64,14 @@ public class UserController extends HttpServlet {
                     rd = request.getRequestDispatcher("/WEB-INF/dog/user/login.jsp");
                     rd.forward(request, response);
                 } else {
-                    uId = request.getParameter("uId");
+                    uId = request.getParameter("uid");
                     pwd = request.getParameter("pwd");
                     int result = uSvc.login(uId, pwd);
                     if (result == uSvc.CORRECT_LOGIN) {
                         user = uSvc.getUserByUid(uId);
                         session.setAttribute("sessUid", uId);
                         session.setAttribute("sessUname", user.getUname());
+                        session.setAttribute("sessBalance", user.getBalance());
                         msg = user.getUname() + "님 환영합니다.";
                         url = "/jw/dog/home";
                     } else if (result == uSvc.WRONG_PASSWORD) {
@@ -129,16 +130,21 @@ public class UserController extends HttpServlet {
                     request.setAttribute("user", user);
                     rd.forward(request, response);
                 } else {
-                    uId = request.getParameter("uId");
+                    uId = (String)session.getAttribute("sessUid");
                     pwd = request.getParameter("pwd");
                     pwd2 = request.getParameter("pwd2");
                     hashedPwd = request.getParameter("hashedPwd");
                     uname = request.getParameter("uname");
                     email = request.getParameter("email");
+                    int balance = (int)session.getAttribute("sessBalance");
                     if (pwd != null && pwd.equals(pwd2))
                         hashedPwd = BCrypt.hashpw(pwd, BCrypt.gensalt());
-                    user = new User(uId, hashedPwd, uname, email);
+                    user = new User(uId, hashedPwd, uname, email, balance);
                     uSvc.updateUser(user);
+                    session.setAttribute("sessUid",user.getuId());
+                    session.setAttribute("sessBalance",user.getBalance());
+                    session.setAttribute("sessUname",user.getUname());
+
                     response.sendRedirect("/jw/dog/user/list?page=1");
                 }
                 break;
@@ -146,7 +152,7 @@ public class UserController extends HttpServlet {
             case "delete":
                 uId = request.getParameter("uId");
                 uSvc.deleteUser(uId);
-                String sessUid = (String) session.getAttribute("sessUId");
+                String sessUid = (String) session.getAttribute("sessUid");
                 if (!sessUid.equals("admin"))
                     session.invalidate();
                 response.sendRedirect("/jw/dog/user/list?page=1");

@@ -5,19 +5,20 @@ import java.util.List;
 import dog.entity.Reply;
 
 public interface ReplyService {
+	 public static final int COUNT_PER_PAGE = 10;
 	
-		 List<Reply> getReplyList(Reply reply);		//글 목록 얻어오기
+	 List<Reply> getReplyList(int boardId);		//글 목록 얻어오기
+	 
+	 Reply getReply(int replyId);
 		
-		 void deleteReply(int replyId);						//댓글 삭제
+	 void insertReply(Reply reply);				//댓글 추가
 		
-		 void insertReply(Reply reply);				//댓글 추가
-					
-		 int getSequence();							//추가할 댓글의 글번호를 리턴하는 메소드
+	 void updateReply(Reply reply);				//댓글 수정
 		
-		 void updateReply(Reply reply);				//댓글 수정
-		
-		 Reply getData(int num);				//댓글 하나의 정보를 리턴하는 메소드
-		
-		 int getCount(int ref_group);					//댓글의 갯수를 리턴하는 메소드
+	 void increaseReplyCount(int boardId);		// 댓글 증가	
+	 
+	 void deleteReply(int replyId);						//댓글 삭제
+
+	
 	
 }

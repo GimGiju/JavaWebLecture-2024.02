@@ -52,7 +52,7 @@
 				</div>
 				</ul>
 			<c:if test="${not empty sessUid}">
-				<span class="navbar-text me-3">${sessUname}님 환영합니다.</span>
+				<span class="navbar-text me-3">${sessUname}님 환영합니다. ${sessBalance} 포인트</span>
 			</c:if>
 		</div>
 	</nav>
