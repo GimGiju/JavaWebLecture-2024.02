@@ -3,6 +3,7 @@ package dog.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +56,7 @@ public class BoardDao {
 		Connection conn = getConnection();
 		String sql = "SELECT b.*, u.uId FROM board b"
 					+ "	JOIN user u ON b.uId=u.uId"
-					+ "	WHERE b.isDeleted=0 AND " + field + " LIKE ?"
+					+ "	WHERE b.isDeleted=0 AND b." + field + " LIKE ?"
 					+ "	ORDER BY boardId DESC "
 					+ "	LIMIT ? OFFSET ?";
 		List<Board> list = new ArrayList<Board>();
@@ -159,4 +160,24 @@ public class BoardDao {
 			}
 			return count;
 		}
+		
+		 public void increaseReplyCount(int boardId) {
+		        Connection conn = getConnection();
+		        String sql = "UPDATE board b JOIN (SELECT boardId, COUNT(*) AS replyCount FROM reply WHERE isDeleted = 0 GROUP BY boardId) r ON b.boardId = r.boardId SET b.replyCount = r.replyCount";
+		        try {
+		            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+		            pstmt.executeUpdate();
+		            pstmt.close();
+		        } catch (Exception e) {
+		            e.printStackTrace();
+		        } finally {
+		            try {
+		                if (conn != null)
+		                    conn.close();
+		            } catch (SQLException e) {
+		                e.printStackTrace();
+		            }
+		        }
+		    }
 }

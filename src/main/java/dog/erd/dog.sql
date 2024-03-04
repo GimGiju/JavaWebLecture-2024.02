@@ -9,7 +9,6 @@ SET SESSION FOREIGN_KEY_CHECKS=0;
 
 DROP TABLE IF EXISTS reply;
 DROP TABLE IF EXISTS board;
-DROP TABLE IF EXISTS dog;
 DROP TABLE IF EXISTS liked;
 DROP TABLE IF EXISTS gallery;
 DROP TABLE IF EXISTS user;
@@ -33,27 +32,14 @@ CREATE TABLE board
 );
 
 
-CREATE TABLE dog
-(
-	dogId int NOT NULL AUTO_INCREMENT,
-	bDate date,
-	breed varchar(255) NOT NULL,
-	gender varchar(255),
-	dname varchar(255),
-	uId varchar(255) NOT NULL,
-	PRIMARY KEY (dogId)
-);
-
-
 CREATE TABLE gallery
 (
 	galleryId int NOT NULL AUTO_INCREMENT,
-	title varchar(255) NOT NULL,
-	content varchar(4000),
 	isDeleted int DEFAULT 0,
 	likeCount int DEFAULT 0,
 	fName varchar(255) DEFAULT '""',
 	uId varchar(255) NOT NULL,
+	title varchar(255) NOT NULL,
 	PRIMARY KEY (galleryId)
 );
 
@@ -85,7 +71,7 @@ CREATE TABLE user
 	pwd varchar(255) NOT NULL,
 	uname varchar(255) NOT NULL,
 	email varchar(255),
-	regDate date DEFAULT (CURRENT_DATE),
+	regDate date DEFAULT CURRENT_DATE,
 	isDeleted int DEFAULT 0,
 	balance int DEFAULT 0,
 	PRIMARY KEY (uId),
@@ -113,14 +99,6 @@ ALTER TABLE liked
 
 
 ALTER TABLE board
-	ADD FOREIGN KEY (uId)
-	REFERENCES user (uId)
-	ON UPDATE RESTRICT
-	ON DELETE RESTRICT
-;
-
-
-ALTER TABLE dog
 	ADD FOREIGN KEY (uId)
 	REFERENCES user (uId)
 	ON UPDATE RESTRICT

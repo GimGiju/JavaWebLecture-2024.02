@@ -25,7 +25,7 @@ import dog.service.ReplyService;
 import dog.service.ReplyServiceImpl;
 
 @WebServlet({"/dog/board/list", "/dog/board/insert", "/dog/board/update", 
-			 "/dog/board/delete", "/dog/board/detail"})
+			 "/dog/board/delete", "/dog/board/detail","/dog/board/insertReply"})
 public class BoardController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private BoardService bSvc = new BoardServiceImpl();
@@ -68,7 +68,7 @@ public class BoardController extends HttpServlet {
 				pageList.add(String.valueOf(i));
 			request.setAttribute("pageList", pageList);
 			
-			rd = request.getRequestDispatcher("/WEB-INF/dog/board/list.jsp");
+			rd = request.getRequestDispatcher("/WEB-INF/view/dog/board/list.jsp");
 			rd.forward(request, response);
 			break;
 			
@@ -78,7 +78,7 @@ public class BoardController extends HttpServlet {
 				break;
 			}
 			if (method.equals("GET")) {
-				rd = request.getRequestDispatcher("/WEB-INF/dog/board/insert.jsp");
+				rd = request.getRequestDispatcher("/WEB-INF/view/dog/board/insert.jsp");
 				rd.forward(request, response);		
 			} else {
 				title = request.getParameter("title");
@@ -106,40 +106,21 @@ public class BoardController extends HttpServlet {
 			boardId = Integer.parseInt(request.getParameter("boardId"));
 			board = bSvc.getBoard(boardId);
 			uId = board.getuId();
+			request.setAttribute("board", board);
 			if ((!uId.equals(sessUid)) && sessUid!=null)
 				bSvc.increaseViewCount(boardId);
-			if (method.equals("GET")) {
-				rd = request.getRequestDispatcher("/WEB-INF/dog/board/detail.jsp");
-				rd.forward(request, response);
-				System.out.println("여기네");
-			}else {
-				title = request.getParameter("title");
-				content = request.getParameter("content");
-				board = new Board(title, content, sessUid);
-				bSvc.insertBoard(board);
-				
-				comment = request.getParameter("comment");	
-			    reply = new Reply(comment, board.getBoardId(), sessUid);
-                rSvc.insertReply(reply);
-                board = bSvc.getBoard(boardId);
-    			System.out.println("board -=----====================" + board);
-    			request.setAttribute("board", board);
-    			 // 댓글 목록을 가져올 때 field를 "boardId"로 설정
-    			List<Reply> replyList = rSvc.getReplyList(boardId); 
-    		    request.setAttribute("replyList", replyList);
-    		    
-    		    
-    		    rd = request.getRequestDispatcher("/WEB-INF/dog/board/detail.jsp");
-    		    rd.forward(request, response);
-			}
+			List<Reply> replyList = rSvc.getReplyList(boardId); 
+			request.setAttribute("replyList", replyList);
+			rd = request.getRequestDispatcher("/WEB-INF/view/dog/board/detail.jsp");
+			rd.forward(request, response);
 			
 			break;
 			
 		case "delete":
 			boardId = Integer.parseInt(request.getParameter("boardId"));
 			bSvc.deleteBoard(boardId);
-			replyId = Integer.parseInt(request.getParameter("replyId"));
-			rSvc.deleteReply(replyId);
+//			replyId = Integer.parseInt(request.getParameter("replyId"));
+//			rSvc.deleteReply(replyId);
 			page = (Integer) session.getAttribute("currentBoardPage");
 			field = (String) session.getAttribute("field");
 			query = (String) session.getAttribute("query");
@@ -155,7 +136,7 @@ public class BoardController extends HttpServlet {
 				
 //				replyId = Integer.parseInt(request.getParameter("replyId"));
 //				reply = rSvc.getReply(replyId);
-				rd = request.getRequestDispatcher("/WEB-INF/dog/board/update.jsp");
+				rd = request.getRequestDispatcher("/WEB-INF/view/dog/board/update.jsp");
 				rd.forward(request, response);
 			} else {
 				boardId = Integer.parseInt(request.getParameter("boardId"));
@@ -173,10 +154,18 @@ public class BoardController extends HttpServlet {
 				response.sendRedirect("/jw/dog/board/detail?boardId=" + boardId + "&uId=" + uId );
 			}
 			break;
-	
-
+		
+		case "insertReply":
+			boardId = Integer.parseInt(request.getParameter("boardId"));
+			comment = request.getParameter("comment");	
+		    reply = new Reply(comment, boardId, sessUid);
+            rSvc.insertReply(reply);
+            bSvc.increaseReplyCount(boardId);
+            response.sendRedirect("/jw/dog/board/detail?boardId=" + boardId);
+            break;
 		}
-		}
+		
+	}
 		
 	
 

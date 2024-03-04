@@ -53,86 +53,58 @@ public class Reply {
 		this.isDeleted = isDeleted;
 	}
 
-
-
 	@Override
 	public String toString() {
 		return "Reply [replyId=" + replyId + ", comment=" + comment + ", regTime=" + regTime + ", boardId=" + boardId
 				+ ", uId=" + uId + ", isDeleted=" + isDeleted + "]";
 	}
 
-
-
 	public int getReplyId() {
 		return replyId;
 	}
-
-
 
 	public void setReplyId(int replyId) {
 		this.replyId = replyId;
 	}
 
-
-
 	public String getComment() {
 		return comment;
 	}
-
-
 
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
 
-
-
 	public LocalDateTime getRegTime() {
 		return regTime;
 	}
-
-
 
 	public void setRegTime(LocalDateTime regTime) {
 		this.regTime = regTime;
 	}
 
-
-
 	public int getBoardId() {
 		return boardId;
 	}
-
-
 
 	public void setBoardId(int boardId) {
 		this.boardId = boardId;
 	}
 
-
-
 	public String getuId() {
 		return uId;
 	}
-
-
 
 	public void setuId(String uId) {
 		this.uId = uId;
 	}
 
-
-
 	public int getIsDeleted() {
 		return isDeleted;
 	}
 
-
-
 	public void setIsDeleted(int isDeleted) {
 		this.isDeleted = isDeleted;
 	}
-
-
 	
 }

@@ -21,11 +21,17 @@ public class Gallery {
                 '}';
     }
 
-    public Gallery(String title, String uId) {
+    public Gallery(String fName, String title) {
+        this.fName = fName;
         this.title = title;
-        this.uId = uId;
     }
 
+
+    public Gallery(int galleryId, String fName, String title) {
+        this.galleryId = galleryId;
+        this.fName = fName;
+        this.title = title;
+    }
 
     public Gallery(String fName, String uId, String title) {
         this.fName = fName;

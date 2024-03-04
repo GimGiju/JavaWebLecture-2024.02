@@ -39,4 +39,9 @@ public class ReplyServiceImpl implements ReplyService {
     public void deleteReply(int replyId) {
         replyDao.deleteReply(replyId);
     }
+
+//	@Override
+//	public int getReplyCount(int boardId) {
+//		return rDao.;
+//	}
 }

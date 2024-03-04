@@ -65,7 +65,7 @@ public class ReplyDao {
 
     public List<Reply> getReplyList(int boardId) {
         Connection conn = getConnection();
-        String sql = "SELECT * FROM reply WHERE isDeleted=0 AND boardId=? ORDER BY replyId DESC";
+        String sql = "SELECT * FROM reply WHERE isDeleted=0 AND boardId=? ORDER BY replyId ";
 
         List<Reply> list = new ArrayList<>();
         try {
@@ -99,7 +99,7 @@ public class ReplyDao {
 
     public void insertReply(Reply reply) {
         Connection conn = getConnection();
-        String sql = "insert into reply values (?, default, ?, ?, default)";
+        String sql = "insert into reply values (default, ?, default, ?, ?, default)";
         try {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, reply.getComment());
@@ -196,10 +196,9 @@ public class ReplyDao {
 
     public void increaseReplyCount(int boardId) {
         Connection conn = getConnection();
-        String sql = "UPDATE reply SET reply WHERE replyId=?";
+        String sql = "UPDATE board b JOIN (SELECT boardId, COUNT(*) AS replyCount FROM reply WHERE isDeleted = 0 GROUP BY boardId) r ON b.boardId = r.boardId SET b.replyCount = r.replyCount";
         try {
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, boardId);
 
             pstmt.executeUpdate();
             pstmt.close();

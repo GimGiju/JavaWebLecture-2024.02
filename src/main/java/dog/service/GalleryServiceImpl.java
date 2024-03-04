@@ -35,6 +35,12 @@ public class GalleryServiceImpl implements GalleryService{
     }
 
     @Override
+    public void updateLikeCount(int galleryId) {
+        gDao.updateLikeCount(galleryId);
+    }
+
+
+    @Override
     public void insertGallery(Gallery gallery) {
         gDao.insertGallery(gallery);
     }
@@ -50,8 +56,8 @@ public class GalleryServiceImpl implements GalleryService{
     }
 
     @Override
-    public void increaseLiked(int galleryId, String uId) {
-        gDao.increaseLiked(galleryId, uId);
+    public void changeLiked(int galleryId, String uId) {
+        gDao.changeLiked(galleryId, uId);
     }
 
 

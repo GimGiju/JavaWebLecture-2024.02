@@ -2,10 +2,7 @@ package dog.controller;
 
 import dog.entity.Gallery;
 import dog.entity.User;
-import dog.service.GalleryService;
-import dog.service.GalleryServiceImpl;
-import dog.service.UserService;
-import dog.service.UserServiceImpl;
+import dog.service.*;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -29,10 +26,11 @@ import java.util.List;
 )
 public class GalleryController extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    public static final String UPLOAD_PATH = "/Users/kijun/Desktop/pictureFolder";
+    public static final String UPLOAD_PATH = "C:\\Users\\human-21\\Desktop\\pictureFolder";
 
     private GalleryService gSvc = new GalleryServiceImpl();
     private UserService uSvc = new UserServiceImpl();
+    private LikedService lSvc = new LikedServiceImpl();
 
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String[] uri = request.getRequestURI().split("/");
@@ -59,7 +57,24 @@ public class GalleryController extends HttpServlet {
                 session.setAttribute("field", field);
                 List<Gallery> galleryList = gSvc.getGalleryList(page, field);
 
+                for(int i=0;i< galleryList.size();i++){
+                    gSvc.updateLikeCount(galleryList.get(i).getGalleryId());
+                }
+                galleryList = gSvc.getGalleryList(page, field);
+
                 request.setAttribute("galleryList", galleryList);
+
+
+
+//                List<String> uNameList = new ArrayList<>();
+//                for (int i=0;i < galleryList.size();i++) {
+//                    User user = uSvc.getUserByUid(galleryList.get(i).getuId());
+//                    String uName = user.getUname();
+//                    uNameList.add(uName);
+//                }
+//                request.setAttribute("uNameList",uNameList);
+
+
 
                 int totalItems = gSvc.getGalleryCount(field);
                 int totalPages = (int) Math.ceil(totalItems * 1.0 / gSvc.COUNT_PER_PAGE);
@@ -68,7 +83,7 @@ public class GalleryController extends HttpServlet {
                     pageList.add(String.valueOf(i));
                 request.setAttribute("pageList", pageList);
 
-                rd = request.getRequestDispatcher("/WEB-INF/dog/gallery/list.jsp");
+                rd = request.getRequestDispatcher("/WEB-INF/view/dog/gallery/list.jsp");
                 rd.forward(request, response);
                 break;
 
@@ -78,7 +93,7 @@ public class GalleryController extends HttpServlet {
                     break;
                 }
                 if (method.equals("GET")) {
-                    rd = request.getRequestDispatcher("/WEB-INF/dog/gallery/insert.jsp");
+                    rd = request.getRequestDispatcher("/WEB-INF/view/dog/gallery/insert.jsp");
                     rd.forward(request, response);
                 } else {
                     title = request.getParameter("title");
@@ -105,37 +120,47 @@ public class GalleryController extends HttpServlet {
                 }
                 break;
 
-            case "like":
-                galleryId = Integer.parseInt(request.getParameter("galleryId"));
-
-                gSvc.increaseLiked(galleryId, sessUid);
-
-                response.sendRedirect("/jw/dog/gallery/list?p=1");
-                break;
+//            case "liked":
+//                galleryId = Integer.parseInt(request.getParameter("galleryId"));
+//
+//                gSvc.changeLiked(galleryId, sessUid);
+//
+//                response.sendRedirect("/jw/dog/gallery/list?p=1");
+//                break;
 
             case "delete":
                 galleryId = Integer.parseInt(request.getParameter("galleryId"));
                 gSvc.deleteGallery(galleryId);
-                page = (Integer) session.getAttribute("currentBoardPage");
-                field = (String) session.getAttribute("field");
-                response.sendRedirect("/jw/dog/gallery/list?p=" + page + "&f=" + field);
+                response.sendRedirect("/jw/dog/gallery/list?p=1");
+
                 break;
+
 
             case "update":
                 if (method.equals("GET")) {
                     galleryId = Integer.parseInt(request.getParameter("galleryId"));
                     gallery = gSvc.getGallery(galleryId);
                     request.setAttribute("gallery", gallery);
-                    rd = request.getRequestDispatcher("/WEB-INF/dog/gallery/update.jsp");
+                    rd = request.getRequestDispatcher("/WEB-INF/view/dog/gallery/update.jsp");
                     rd.forward(request, response);
                 } else {
                     galleryId = Integer.parseInt(request.getParameter("galleryId"));
-                    uId = request.getParameter("uid");
                     title = request.getParameter("title");
-                    gallery = new Gallery(title, uId);
+
+                    request.setAttribute("galleryId",galleryId);
+
+                    Part filePart = request.getPart("fName");
+                    String fileName = filePart.getSubmittedFileName();
+                    String[] ext = fileName.split("\\.");
+                    String extension = ext[ext.length - 1];
+                    String fName = System.currentTimeMillis() + "." + extension;
+                    String path = UPLOAD_PATH + "/" + fName;
+                    filePart.write(path);
+                    gallery = new Gallery(galleryId, fName, title);
+                    request.setAttribute("fName",fName);
 
                     gSvc.updateGallery(gallery);
-                    response.sendRedirect("/jw/dog/gallery/detail?galleryId=" + galleryId + "&uid=" + uId);
+                    response.sendRedirect("/jw/dog/gallery/list?p=1");
                 }
                 break;
             case "view":
@@ -157,6 +182,19 @@ public class GalleryController extends HttpServlet {
                 }
                 fis.close(); os.close();
                 break;
+
+            case "like":
+                galleryId = Integer.parseInt(request.getParameter("galleryId"));
+                int isLiked = lSvc.updateLiked(galleryId, sessUid);
+                System.out.println("isLiked 값 =========== " + isLiked);
+                System.out.println("galleryId =========== " + galleryId);
+                System.out.println("userId =========== " + sessUid);
+                request.setAttribute("isLiked",isLiked);
+                session.setAttribute("sessLiked",isLiked);
+
+                gSvc.updateLikeCount(galleryId);
+                response.sendRedirect("/jw/dog/gallery/list?p=1");
+
         }
     }
 }
