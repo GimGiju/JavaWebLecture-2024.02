@@ -41,4 +41,9 @@
             username="hmuser" password="hmpass" 
             driverClassName="com.mysql.cj.jdbc.Driver"
             url="jdbc:mysql://localhost:3306/dog" />    
+            
+       <Resource name="jdbc/exam" auth="Container" type="javax.sql.DataSource"
+            username="hmuser" password="hmpass" 
+            driverClassName="com.mysql.cj.jdbc.Driver"
+            url="jdbc:mysql://localhost:3306/exam" />   
 </Context>

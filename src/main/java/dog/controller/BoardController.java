@@ -38,9 +38,10 @@ public class BoardController extends HttpServlet {
 		String method = request.getMethod();
 		HttpSession session = request.getSession();
 		RequestDispatcher rd = null;
-		String title = "", content = "", field = "", query = "", page_ = "", uId = "", comment = "";
+		String title = "", content = "", field = "", query = "", page_ = "", uId = "", comment = "", pwd = "";
 		Board board = null;
 		Reply reply = null;
+		User user = null;
 		int boardId = 0, page = 0, replyId = 0;
 		String sessUid = (String) session.getAttribute("sessUid");
 		request.setCharacterEncoding("utf-8");
@@ -86,14 +87,11 @@ public class BoardController extends HttpServlet {
 				board = new Board(title, content, sessUid);
 				bSvc.insertBoard(board);
 				
-				comment = request.getParameter("comment");	
-			    reply = new Reply(comment, board.getBoardId(), sessUid);
-                rSvc.insertReply(reply);
 				
 				int sessBalance = (int) session.getAttribute("sessBalance");
 				sessBalance += 100;
 				session.setAttribute("sessBalance",sessBalance);
-				User user = uSvc.getUserByUid(sessUid);
+				user = uSvc.getUserByUid(sessUid);
 				user.setBalance(sessBalance);
 				uSvc.updateUser(user);
 
@@ -119,8 +117,6 @@ public class BoardController extends HttpServlet {
 		case "delete":
 			boardId = Integer.parseInt(request.getParameter("boardId"));
 			bSvc.deleteBoard(boardId);
-//			replyId = Integer.parseInt(request.getParameter("replyId"));
-//			rSvc.deleteReply(replyId);
 			page = (Integer) session.getAttribute("currentBoardPage");
 			field = (String) session.getAttribute("field");
 			query = (String) session.getAttribute("query");
@@ -134,8 +130,6 @@ public class BoardController extends HttpServlet {
 				board = bSvc.getBoard(boardId);
 				request.setAttribute("board", board);
 				
-//				replyId = Integer.parseInt(request.getParameter("replyId"));
-//				reply = rSvc.getReply(replyId);
 				rd = request.getRequestDispatcher("/WEB-INF/view/dog/board/update.jsp");
 				rd.forward(request, response);
 			} else {
@@ -147,10 +141,6 @@ public class BoardController extends HttpServlet {
 				
 				bSvc.updateBoard(board);
 				
-//				replyId = Integer.parseInt(request.getParameter("replyId"));
-//				comment = request.getParameter("comment");
-//				reply = new Reply(replyId, comment);
-//				rSvc.updateReply(reply);
 				response.sendRedirect("/jw/dog/board/detail?boardId=" + boardId + "&uId=" + uId );
 			}
 			break;

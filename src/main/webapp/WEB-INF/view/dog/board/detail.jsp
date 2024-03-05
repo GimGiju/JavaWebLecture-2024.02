@@ -62,7 +62,7 @@
 	                        <div class="d-flex flex-row mt-1">
 	                            <div class="card bg-light text-dark w-75">
 	                                <div class="card-body">
-	                                    ${sessUname}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${sessRegDate}<br> 
+	                                    ${reply.uId}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${fn:replace(reply.regTime, "T", " ")}<br> 
 	                                    ${fn:replace(reply.comment, newline, '<br>')}  <!-- content -->
 	                                </div>
 	                            </div>

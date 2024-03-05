@@ -109,7 +109,7 @@ public class UserController extends HttpServlet {
                     rd = request.getRequestDispatcher("/WEB-INF/view/dog/user/login.jsp");
                     rd.forward(request, response);
                 } else {
-                    uId = request.getParameter("uid");
+                    uId = request.getParameter("uId");
                     pwd = request.getParameter("pwd");
                     int result = uSvc.login(uId, pwd);
                     if (result == uSvc.CORRECT_LOGIN) {

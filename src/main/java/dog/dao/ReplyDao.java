@@ -99,7 +99,7 @@ public class ReplyDao {
 
     public void insertReply(Reply reply) {
         Connection conn = getConnection();
-        String sql = "insert into reply values (default, ?, default, ?, ?, default)";
+        String sql = "insert into reply values (default, ?, default, ?, ?, default )";
         try {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, reply.getComment());
